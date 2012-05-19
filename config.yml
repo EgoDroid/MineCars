@@ -1,0 +1,128 @@
+# MineCars V1.4 Config File
+#
+# Permission Nodes:
+#
+# minecars.*                              # Gives a player all permission nodes!
+# minecars.admin.*                    # AdminFuel and Reload Permission
+# minecars.admin                       # Allows players to get free fuel (command: /mcg adminfuel)
+# minecars.admin.reload             # Allows players to reload the config (command: /mcg reload)
+# minecars.useCommands          # Allows your players to use the /mcg command
+# minecars.move                        # Allows your players to use MineCars
+# minecars.fuelstation.use       # Allows your player to use a Fuelstation
+# minecars.fuelstation.create    # Allows a player to create a Fuel Station (create a sign, first line : Fuel Station)
+# minecars.fuelstation.destroy   # Allows a player to destroy a Fuel Station
+#
+# ChangeLog:
+# 
+#  
+#  
+#  **V1.4**
+# -> Added Fuel Stations (click on shields with the heading Fuel Station to sell fuel) (depends on the Fuel System setting)
+# -> Climb hills with your MineCar(t) (using steps, define the step material below, StreetStepType)
+# -> A MineCar(t) has got an Exhaust now (UseExhaust(
+# -> Fixed many bugs!
+#
+#  **V1.3**
+# -> Added car destroy function (if the car leaves the defined streetblocks, it will be destroyed)
+# -> Added Permissions
+# -> Added new Subcommands: /mcg adminfuel (free fuel load for admins, see Permissions) ; /mcg reload (reloads the config) 
+# -> Place Minecarts on the defined blocks (see config file)
+# -> Using new Database => Fixed Essentials Bug
+#
+#  **V1.2**
+# -> Added Fuel System (with Economy)
+# -> Configure Streetblocks
+# 
+# By Reshka94 (EGODROID)
+# All rights reserved.
+#
+
+### ** Main Stuff **
+
+# Destroy Minecarts when leaving the street / motorway?
+destroyCar: true
+
+# Should user be able to place Minecarts on the defined blocks?
+placeMinecart: true
+
+# Do you want to use an exhault for your Minecar(t)? (creates Smoke around your Minecar)
+UseExhaust: true
+
+# Do you want to use a railing system (conductor rails)? Define the rail block over here (set it to 0 if you don't want to use one)
+RailingBlock: 101
+
+### ** Configure the Speed Multipliers (global)**
+
+# For Streets
+street-speedfactor: 7
+# For motorways
+motorway-speedfactor: 12
+
+# ** Configure the Streetblocks **
+
+# Which Type of Step do you want to use for hills?
+# 0 = Stone
+# 1 = Sandstone
+# 2 = Wood
+# 3 = Cobblestone
+# 4 = Bricks
+# 5 = Stone Bricks
+
+StreetStepType: 0
+
+# Wool or normal Blocks?
+useWool: true
+
+# If useWool = true , define the colors
+#
+# Available Colors:
+#
+# BLACK
+# BLUE
+# BROWN
+# CYAN
+# GRAY
+# GREEN
+# LIGHT_BLUE
+# LIME
+# MAGENTA
+# ORANGE
+# PINK   
+# PURPLE    
+# RED         
+# SILVER
+# WHITE
+# YELLOW 
+
+# Color for streets
+WoolColorstreet: GRAY
+# Color for wool
+WoolColorMotorway: BLACK
+
+
+# If useWool = false, define the blocks for streets and motorways
+# Please use Item IDs, no names! You can find every ID with google!
+#
+# Block ID for Streets
+streetBlock: 1
+# Block ID for Motorways 
+motorwayBlock: 4
+
+### ** FUEL SYSTEM **
+# Should users buy fuel to run their Minecar?
+UseFuelSystem: true
+
+# Do you want to pay with Money or Items? (money = true)
+# Economy requires the PlugIn Vault !!
+UseEconomy: false
+
+# If useEconomy = true, define the costs for one fuel load over here
+priceperfuel: 15
+
+# If useEconomy = false, define the item and the amount they have to pay for one fuel load over here
+
+# ID of the Item they have to pay
+fuelitemid: 263
+# How much should they pay for one load?
+itemsperfuel: 5
+

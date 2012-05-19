@@ -1,0 +1,19 @@
+name: MineCars
+version: 1.5
+description: This plugin allows you to drive with your Minecart without Rails just using your movement keys on specified blocks (see config). More on MineCars BukkitDev page!
+# We could place every author in the authors list, but chose not to for illustrative purposes
+# Also, having an author distinguishes that person as the project lead, and ensures their 
+# name is displayed first
+author: Reshka94
+website: hhttp://dev.bukkit.org/server-mods/minecars/
+
+main: com.egodroid.bukkit.carmod.CarMod
+database: true
+depend: [Vault]
+
+
+commands:
+  mcg:
+    description: Main Command of MineCars. All Subcommands at the BukkitDev Site of MineCars!
+
+

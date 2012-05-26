@@ -2,5 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Users/Branden/Dropbox/Public/bukkit.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Branden/Dropbox/Public/Vault.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

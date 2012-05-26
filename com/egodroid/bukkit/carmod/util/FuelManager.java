@@ -37,9 +37,11 @@ public class FuelManager implements Listener {
 	public boolean useEconomy;
 	private String tempString;
 	public static Economy economy = null;
+	@SuppressWarnings("unused")
 	private final Logger log = Logger.getLogger("Minecraft");
 	public boolean hasShowed = false;
-
+	private ChatColor green = ChatColor.DARK_GREEN;
+	private ChatColor white = ChatColor.WHITE;
 	
 	public FuelManager(CarMod pPlugin) {
 		this.mPlugin = pPlugin;
@@ -48,7 +50,7 @@ public class FuelManager implements Listener {
 			try {
 				this.inputfile.createNewFile();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				 
 				e.printStackTrace();
 			}
 		this.setupConfig();
@@ -79,7 +81,7 @@ public class FuelManager implements Listener {
 			int tempfuel =  this.input.getInt(player.getName() + ".fuel");
 			
 			if (tempfuel == 20 && this.hasShowed == false) {
-				player.sendMessage("[MineCars] Warning! Your fuel gets §clow! Check fuel with §c/mcg §cfuel");
+				player.sendMessage("[MineCars] Warning! Your fuel is getting §clow! Check fuel with §c/mcg §cfuel");
 				this.hasShowed = true;
 				return true;
 			}
@@ -89,7 +91,7 @@ public class FuelManager implements Listener {
 			}
 
 			if (tempfuel == 0 && this.hasShowed == false ) {
-				player.sendMessage(ChatColor.RED + String.format("[%s] - You don't have got any fuel left! Buy new with /mcg buy", this.mPlugin.getDescription().getName()));
+				player.sendMessage(green + "[MineCars] "+white+ "You don't have any fuel left! Buy more with /mcg buy, or visit a Fuel Station.");
 				this.hasShowed = true;
 				return false;
 			}
@@ -108,7 +110,7 @@ public class FuelManager implements Listener {
 		i = this.input.getInt(pPlayer.getName() + ".fuel");	
 			p = i / 10;
 			q=  10 - (i / 10);
-		this.tempString= ChatColor.RED + "[MineCars] Your current fuel level is: ";
+		this.tempString= green + "[MineCars]"+white+" Your current fuel level is: ";
 		
 		while(p > 0) {
 			p--;
@@ -138,12 +140,12 @@ public class FuelManager implements Listener {
 			EconomyResponse er = this.economy.withdrawPlayer(pPlayer.getName(), costs);
 				if (er.transactionSuccess()) {
 					if (costs != 0)
-						pPlayer.sendMessage(String.format("[%s] - You sucessfully bought new fuel for %s %s!", this.mPlugin.getDescription().getName(), costs, this.economy.currencyNamePlural()));
-					else pPlayer.sendMessage(String.format("[%s] - You don't need any fuel!", this.mPlugin.getDescription().getName()));
+						pPlayer.sendMessage(String.format(green+"[%s]"+white+" You successfully bought new fuel for %s %s!", this.mPlugin.getDescription().getName(), costs, this.economy.currencyNamePlural()));
+					else pPlayer.sendMessage(String.format(green+"[%s]"+white+" You don't need any fuel!", this.mPlugin.getDescription().getName()));
 					this.addFuelPlayer(pPlayer.getName(), (100));
 					success = true;
 				} else {
-					pPlayer.sendMessage(String.format("[%s] - You don't have got enough Money! You need at least %s %s", this.mPlugin.getDescription().getName(), costs, this.economy.currencyNamePlural()));
+					pPlayer.sendMessage(String.format(green+"[%s]"+white+"- You don't have enough Money! You need at least %s %s", this.mPlugin.getDescription().getName(), costs, this.economy.currencyNamePlural()));
 					success = false;
 					
 				}
@@ -171,19 +173,19 @@ public class FuelManager implements Listener {
 					if (found != null) {
 						pPlayer.getInventory().removeItem(new ItemStack(this.itemID, (int) costsitem));
 						this.addFuelPlayer(pPlayer.getName(), 100);
-						pPlayer.sendMessage(String.format("[%s] - You sucessfully bought new fuel for %s x %s !", this.mPlugin.getDescription().getName(), costsitem, Material.getMaterial(this.itemID).name()));
+						pPlayer.sendMessage(String.format(green+"[%s]"+white+" You sucessfully bought new fuel for %s x %s !", this.mPlugin.getDescription().getName(), costsitem, Material.getMaterial(this.itemID).name()));
 						success = true;
 					} else {
 						if(costsitem !=0)
-							pPlayer.sendMessage(String.format("[%s] - You need at least %s of %s in your Inventory!", this.mPlugin.getDescription().getName(), costsitem,  Material.getMaterial(this.itemID).name()));
-						else pPlayer.sendMessage(String.format("[%s] - You don't need any fuel!", this.mPlugin.getDescription().getName()));
+							pPlayer.sendMessage(String.format(green+"[%s]"+white+" You need at least %s of %s in your Inventory!", this.mPlugin.getDescription().getName(), costsitem,  Material.getMaterial(this.itemID).name()));
+						else pPlayer.sendMessage(String.format(green+"[%s]"+white+" You don't need any fuel!", this.mPlugin.getDescription().getName()));
 						success = false;
 					}
 				
 				} else {
 					if(costsitem !=0)
-						pPlayer.sendMessage(String.format("[%s] - You need at least %s of %s in your Inventory!", this.mPlugin.getDescription().getName(), costsitem,  Material.getMaterial(this.itemID).name()));
-					else pPlayer.sendMessage(String.format("[%s] - You don't need any fuel!", this.mPlugin.getDescription().getName()));
+						pPlayer.sendMessage(String.format(green+"[%s]"+white+" You need at least %s of %s in your Inventory!", this.mPlugin.getDescription().getName(), costsitem,  Material.getMaterial(this.itemID).name()));
+					else pPlayer.sendMessage(String.format(green+"[%s]"+white+" You don't need any fuel!", this.mPlugin.getDescription().getName()));
 					success = false;
 				}
 			

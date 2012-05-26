@@ -1,4 +1,4 @@
-# MineCars V1.4 Config File
+# MineCars V1.6 Config File
 #
 # Permission Nodes:
 #
@@ -45,7 +45,7 @@ destroyCar: true
 # Should user be able to place Minecarts on the defined blocks?
 placeMinecart: true
 
-# Do you want to use an exhault for your Minecar(t)? (creates Smoke around your Minecar)
+# Do you want to use an exhaust for your Minecar(t)? (creates Smoke around your Minecar)
 UseExhaust: true
 
 # Do you want to use a railing system (conductor rails)? Define the rail block over here (set it to 0 if you don't want to use one)
@@ -126,3 +126,12 @@ fuelitemid: 263
 # How much should they pay for one load?
 itemsperfuel: 5
 
+####################
+# Driver's License #
+####################
+
+# This option will decide if you want the Driver's License signs to function or not
+UseLicense: true
+
+# This is the amount it will cost to buy a Driver's License when using the sign
+LicenseCost: 10000

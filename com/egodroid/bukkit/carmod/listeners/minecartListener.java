@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 import net.milkbowl.vault.permission.Permission;
-import net.minecraft.server.EnumSkyBlock;
-import net.minecraft.server.Packet51MapChunk;
 
 import org.bukkit.DyeColor;
 import org.bukkit.Effect;
@@ -17,7 +15,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.CraftWorld;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -137,8 +134,8 @@ public void onVehicleUpdate(VehicleUpdateEvent event) throws SQLException {
     		//plvelocity.multiply(this.mMultiplier);	
     		
     		if (this.mPlugin.getConfig().getBoolean("UseExhaust")) {
-    		player.getWorld().playEffect(player.getLocation(), Effect.SMOKE, 0);
-    		player.getWorld().playEffect(player.getLocation(), Effect.SMOKE, 0);
+    			player.getWorld().playEffect(player.getLocation(), Effect.SMOKE, 0);
+    			player.getWorld().playEffect(player.getLocation(), Effect.SMOKE, 0);
     		}
     		
     		if (player.isInsideVehicle() && this.permission.has(player, "minecars.move")) {
@@ -243,7 +240,7 @@ public void onVehicleUpdate(VehicleUpdateEvent event) throws SQLException {
     							try {
     								this.canMove = this.mFuelM.canMove(player);
     							} catch (SQLException e) {
-    								// TODO Auto-generated catch block
+    								
     								e.printStackTrace();
     							}
     						}
@@ -289,6 +286,16 @@ public void setSpeedMultiplier(int pMultiplier, Player pPlayer) {
 	
 }
 
+public int getSpeedMultiplier(Player pPlayer) {
+	String tempString = pPlayer.getName();
+	
+	if (mPlayerMap.containsKey(tempString)){
+		return this.mPlayerMap.get(tempString);
+	}
+	return 0;
+	
+}
+
 
 public void setSpeedFactors(int pStreetF, int pMotorwayF) {
 	this.mStreetSpeedF = pStreetF;
@@ -296,7 +303,7 @@ public void setSpeedFactors(int pStreetF, int pMotorwayF) {
 	
 }
 
-private boolean setupPermissions()
+protected boolean setupPermissions()
 {
     RegisteredServiceProvider<Permission> permissionProvider = this.mPlugin.getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
     if (permissionProvider != null) {
@@ -398,13 +405,8 @@ public void onVehicleEnter(VehicleEnterEvent event) {
       return;
     }
    
-	
-	if (this.mPlayerYawMap.containsKey(((Player)event.getEntered()).getName())) {
-		this.mPlayerYawMap.remove(((Player)event.getEntered()).getName());
-		this.mPlayerYawMap.put(((Player) event.getEntered()).getName(), new Float( event.getVehicle().getLocation().getYaw()));
-	} else {
-		this.mPlayerYawMap.put(((Player) event.getEntered()).getName(), new Float( event.getVehicle().getLocation().getYaw()));
-	}
+    this.mPlayerYawMap.put(((Player) event.getEntered()).getName(), new Float( event.getVehicle().getLocation().getYaw()));
+
 	
 	Location locyaw = event.getVehicle().getLocation();
 	locyaw.setYaw(event.getVehicle().getLocation().getYaw());
@@ -421,7 +423,7 @@ private void movingCar(Minecart Auto, int pGear, Player player, Vector plvelocit
 		try {
 			this.canMove = this.mFuelM.canMove(player);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 	}
@@ -467,8 +469,6 @@ private Vector checkRailing(Minecart pAuto, Vector pPlayerVel) {
 	} 
 	return pPlayerVel;
 }
-
-
 
 }
 

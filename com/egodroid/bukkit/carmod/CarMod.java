@@ -68,7 +68,6 @@ public class CarMod extends JavaPlugin  {
 	    PluginDescriptionFile pdfFile = getDescription();
 	    getConfig().options().copyDefaults(true);
 	    saveConfig();
-	   
 	    //Database Setup
 	    this.setupDatabase();
 	    
@@ -83,21 +82,7 @@ public class CarMod extends JavaPlugin  {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	    
-	   
-	    
-        //Detect, wether Vault is installed
-        if(getServer().getPluginManager().getPlugin("Vault") != null) {   
-        	 log.info(String.format("[%s] - Found Vault! Can use Economy Support!", getDescription().getName()));
-            this.mFM.setEconomy(getConfig().getBoolean("UseEconomy"));   
-            this.mSL.useEconomy(getConfig().getBoolean("UseEconomy"));
-         } else {
-        	log.info(String.format("[%s] - Disabled Economy Support due to no Vault dependency found! Using Items for Fuel.", getDescription().getName()));
-            this.mFM.setEconomy(false);
-            this.mSL.useEconomy(false);
-            
-        }
-        
+       
         // Event Registration
 	    pm.registerEvents(this.mML, this);
 	    pm.registerEvents(this.mFM, this);
@@ -127,7 +112,9 @@ public class CarMod extends JavaPlugin  {
 	  }
 	  
 	  public void configAll() throws IOException {
+	        //Detect, whether Vault is installed
 	        if(getServer().getPluginManager().getPlugin("Vault") != null) {  
+	        	 log.info(String.format("[%s] - Found Vault! Can use Economy Support!", getDescription().getName()));
 	            this.mFM.setEconomy(getConfig().getBoolean("UseEconomy"));   
 	            this.mSL.useEconomy(getConfig().getBoolean("UseEconomy"));
 	         } else {
@@ -139,6 +126,8 @@ public class CarMod extends JavaPlugin  {
 	        }
 		    //Config Speed Multiplier for Listener
 		    this.mML.setSpeedFactors(getConfig().getInt("street-speedfactor") , getConfig().getInt("motorway-speedfactor") );
+		    this.mSL.setUseLicense(getConfig().getBoolean("UseLicense"));
+		    this.mSL.setLicenseCost(getConfig().getInt("LicenseCost"));
 		    this.mSL.loadSigns();
 		    this.mML.setupConfig();
 		    this.mFM.setupConfig();

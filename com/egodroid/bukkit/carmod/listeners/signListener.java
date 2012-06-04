@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.SQLException;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -30,7 +32,6 @@ public class signListener implements Listener {
 	private boolean useEconomy = false;
 	private boolean useLicense = true;
 	private int licenseCost = 0;
-	@SuppressWarnings("unused")
 	private minecartListener mML;
 	private FuelManager mFM;
 	private File inputFile, tempFile;
@@ -163,8 +164,16 @@ public void onPlayerInteract (PlayerInteractEvent event) {
         }
         
 		if (s.getLine(0).equalsIgnoreCase(ChatColor.GREEN + "Fuel Station")) {
-			if (CarMod.permission.has(p, "minecars.fuelstation.use"))
+			if (CarMod.permission.has(p, "minecars.fuelstation.use")){
+				boolean move = false;
 				this.mFM.buyFuel(event.getPlayer());
+				try {
+					move = mFM.canMove(p);
+				} catch (SQLException e) {
+
+				}
+				mML.canMove.put(p.getName(), move);
+			}
 			else 
 				event.getPlayer().sendMessage(String.format(dGreen+"[%s]"+white+" You don't have Permission to buy Fuel at this Station!", this.mPlugin.getDescription().getName()));
 			return;

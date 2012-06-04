@@ -8,8 +8,6 @@
  * CLEANED
  */
 
-
-
 package com.egodroid.bukkit.carmod;
 
 
@@ -22,6 +20,9 @@ import java.util.logging.*;
 import javax.persistence.PersistenceException;
 
 
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -31,6 +32,7 @@ import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -49,6 +51,8 @@ public class CarMod extends JavaPlugin  {
 	private FuelManager mFM;
 	private playerListener mPL;
 	private signListener mSL;
+	public static Permission permission = null;
+	public static Economy economy = null;
 
 	
 	
@@ -73,13 +77,18 @@ public class CarMod extends JavaPlugin  {
 	    
 	    //Utilities-Init
 	    
+        //Vault setups
+		setupEconomy();
+		setupPermissions();
+		log.info(permission+"");
+	    
 	    this.mFM = new FuelManager(this);
 	    this.mML = new minecartListener(this, this.mFM);
 	    this.mPL = new playerListener(this);
 	    try {
 			this.mSL = new signListener(this, this.mML, this.mFM);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
        
@@ -93,7 +102,7 @@ public class CarMod extends JavaPlugin  {
 	    try {
 			this.configAll();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 	    
@@ -141,5 +150,35 @@ public class CarMod extends JavaPlugin  {
 		      installDDL();
 		    }
 		  }
-    
+	  
+	  private boolean setupEconomy(){
+	        RegisteredServiceProvider<Economy> economyProvider = this.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+	        if (economyProvider != null) {
+	            economy = economyProvider.getProvider();
+	        }
+
+	        return (economy != null);
+	    }
+	  
+	  public boolean setupPermissions(){
+		  
+	      RegisteredServiceProvider<Permission> permissionProvider = this.getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
+	      if (permissionProvider != null) {
+	          permission = permissionProvider.getProvider();
+	      }
+	      return (permission != null);
+	  }
+	  
+/*	  private void checkVault(PluginManager pm){
+		  Plugin p = pm.getPlugin("Vault");
+	      if (p != null) {
+	    	  return;
+	      }else{
+	    	  log.info("[MineCars] Vault is required for MineCars, Install Vault.");
+	    	  log.info("[MineCars] Disabling MineCars");
+	    	  this.setEnabled(false);
+	        }
+	    }
+	    */
 }
+

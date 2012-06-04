@@ -2,22 +2,13 @@ package com.egodroid.bukkit.carmod.listeners;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.logging.Logger;
-
-import net.milkbowl.vault.permission.Permission;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -39,11 +30,12 @@ public class signListener implements Listener {
 	private boolean useEconomy = false;
 	private boolean useLicense = true;
 	private int licenseCost = 0;
+	@SuppressWarnings("unused")
 	private minecartListener mML;
-	private static Permission permissions = null;
 	private FuelManager mFM;
 	private File inputFile, tempFile;
-	private ChatColor green = ChatColor.DARK_GREEN;
+	private ChatColor dGreen = ChatColor.DARK_GREEN;
+	private ChatColor green = ChatColor.GREEN;
 	private ChatColor white = ChatColor.WHITE;
 	
 	
@@ -54,7 +46,6 @@ public signListener(CarMod pPlugin, minecartListener pML, FuelManager pFM) throw
 	this.mPlugin = pPlugin;
 	this.mML = pML;
 	this.mFM = pFM;
-	signListener.permissions = minecartListener.permission;
 	this.inputFile = new File("plugins/MineCars/signs.txt");
 	this.tempFile = new File("plugins/MineCars/signs_temp.txt");
 	if(!this.inputFile.exists())
@@ -75,35 +66,35 @@ public void onSignChange(SignChangeEvent event) throws IOException {
 	if (this.mPlugin.getConfig().getBoolean("UseFuelSystem")) {
 		String[] templines = event.getLines();
 		if(templines[0].equalsIgnoreCase("Fuel Station")) {
-			if (signListener.permissions.has(event.getPlayer(), "minecars.fuelstation.create")) {
+			if (CarMod.permission.has(event.getPlayer(), "minecars.fuelstation.create")) {
 				String temploc = Double.toString(event.getBlock().getLocation().getX()) + ";" + Double.toString(event.getBlock().getLocation().getY()) + ";" + Double.toString(event.getBlock().getLocation().getZ()) + ";" + event.getBlock().getWorld().getName(); 
 				this.addSign(event.getBlock().getLocation(), event.getBlock().getWorld().getName());
 		  
-		  templines[0] = ChatColor.RED + "Fuel Station";
+		  templines[0] = green + "Fuel Station";
 		  templines[1] = ChatColor.WHITE+" Costs: ";
 		  
 		  if (this.useEconomy) {
-			  templines[2] = ChatColor.WHITE+new Integer(this.mPlugin.getConfig().getInt("priceperfuel")).toString() + " " + FuelManager.economy.currencyNamePlural();
+			  templines[2] = ChatColor.WHITE+new Integer(this.mPlugin.getConfig().getInt("priceperfuel")).toString() + " " + CarMod.economy.currencyNamePlural();
 		  } else {
 			  templines[2] = ChatColor.WHITE+new Integer(this.mPlugin.getConfig().getInt("itemsperfuel")).toString() + " " + Material.getMaterial(this.mPlugin.getConfig().getInt("fuelitemid")).name();
 		  }
 		  
-		  event.getPlayer().sendMessage(String.format(green+"[%s]"+white+" Fuel Station sucessfully registered!", this.mPlugin.getDescription().getName()));
+		  event.getPlayer().sendMessage(String.format(dGreen+"[%s]"+white+" Fuel Station sucessfully registered!", this.mPlugin.getDescription().getName()));
 			} else {
-				event.getPlayer().sendMessage(String.format(green+"[%s]"+white+" You don't have the permission to create a Fuel Station!", this.mPlugin.getDescription().getName()));
+				event.getPlayer().sendMessage(String.format(dGreen+"[%s]"+white+" You don't have the permission to create a Fuel Station!", this.mPlugin.getDescription().getName()));
 				event.getBlock().breakNaturally();
 			}
 			return;
 		}
 		if(templines[0].equalsIgnoreCase("License")){
-			if(permissions.has(event.getPlayer(), "minecars.license.create")){
+			if(CarMod.permission.has(event.getPlayer(), "minecars.license.create")){
 				templines[0] = green+"License";
 				templines[1] = green+"~~~~~~~~~~";
 				templines[2] = white+"Price:";
 				templines[3] = white+""+licenseCost;
-				event.getPlayer().sendMessage(String.format(green+"[%s]"+white+" Driver's License Sign sucessfully registered!", this.mPlugin.getDescription().getName()));
+				event.getPlayer().sendMessage(String.format(dGreen+"[%s]"+white+" Driver's License Sign sucessfully registered!", this.mPlugin.getDescription().getName()));
 			}else{
-				event.getPlayer().sendMessage(green+"[MineCars]"+white+ " You don't have the permission to create a Driver's License Sign.");
+				event.getPlayer().sendMessage(dGreen+"[MineCars]"+white+ " You don't have the permission to create a Driver's License Sign.");
 				event.getBlock().breakNaturally();
 			}
 
@@ -116,22 +107,22 @@ public void onBlockBreak(BlockBreakEvent event) throws IOException {
 	if (this.mPlugin.getConfig().getBoolean("UseFuelSystem")) {
 		if(event.getBlock().getType() == Material.WALL_SIGN || event.getBlock().getType() == Material.SIGN_POST || event.getBlock().getType() == Material.SIGN) {
 			Sign sign = (Sign) event.getBlock().getState();
-			if (sign.getLine(0).equalsIgnoreCase(ChatColor.RED + "Fuel Station")) {
-				if (signListener.permissions.has(event.getPlayer(), "minecars.fuelstation.destroy")) {
+			if (sign.getLine(0).equalsIgnoreCase(ChatColor.GREEN + "Fuel Station")) {
+				if (CarMod.permission.has(event.getPlayer(), "minecars.fuelstation.destroy")) {
 					String temploc = Double.toString(event.getBlock().getLocation().getX()) + ";" + Double.toString(event.getBlock().getLocation().getY()) + ";" + Double.toString(event.getBlock().getLocation().getZ()) + ";" + event.getBlock().getWorld().getName(); 
 					this.destroySign(temploc);
-					event.getPlayer().sendMessage(String.format(green+"[%s]"+white+" Fuel Station sucessfully unregistered!", this.mPlugin.getDescription().getName()));
+					event.getPlayer().sendMessage(String.format(dGreen+"[%s]"+white+" Fuel Station sucessfully unregistered!", this.mPlugin.getDescription().getName()));
 				} else {
-					event.getPlayer().sendMessage(String.format(green+"[%s]"+white+" You don't have Permission to destroy a Fuel Station!", this.mPlugin.getDescription().getName()));
+					event.getPlayer().sendMessage(String.format(dGreen+"[%s]"+white+" You don't have Permission to destroy a Fuel Station!", this.mPlugin.getDescription().getName()));
 					event.setCancelled(true);
 					sign.update();
 				}
 			}
-			else if(sign.getLine(0).equalsIgnoreCase(ChatColor.RED + "License")){
-				if(permissions.has(event.getPlayer(),"minecars.license.destroy")){
-					event.getPlayer().sendMessage(String.format(green+"[%s]"+white+" Driver's License Sign sucessfully unregistered!", this.mPlugin.getDescription().getName()));
+			else if(sign.getLine(0).equalsIgnoreCase(ChatColor.GREEN + "License")){
+				if(CarMod.permission.has(event.getPlayer(),"minecars.license.destroy")){
+					event.getPlayer().sendMessage(String.format(dGreen+"[%s]"+white+" Driver's License Sign sucessfully unregistered!", this.mPlugin.getDescription().getName()));
 				}else{
-					event.getPlayer().sendMessage(String.format(green+"[%s]"+white+" You don't have Permission to destroy a Driver's License Sign!", this.mPlugin.getDescription().getName()));
+					event.getPlayer().sendMessage(String.format(dGreen+"[%s]"+white+" You don't have Permission to destroy a Driver's License Sign!", this.mPlugin.getDescription().getName()));
 					event.setCancelled(true);
 					sign.update();
 				}
@@ -171,46 +162,50 @@ public void onPlayerInteract (PlayerInteractEvent event) {
         	return;
         }
         
-		if (s.getLine(0).equalsIgnoreCase(ChatColor.RED + "Fuel Station")) {
-			if (permissions.has(p, "minecars.fuelstation.use"))
+		if (s.getLine(0).equalsIgnoreCase(ChatColor.GREEN + "Fuel Station")) {
+			if (CarMod.permission.has(p, "minecars.fuelstation.use"))
 				this.mFM.buyFuel(event.getPlayer());
 			else 
-				event.getPlayer().sendMessage(String.format(green+"[%s]"+white+" You don't have Permission to buy Fuel at this Station!", this.mPlugin.getDescription().getName()));
+				event.getPlayer().sendMessage(String.format(dGreen+"[%s]"+white+" You don't have Permission to buy Fuel at this Station!", this.mPlugin.getDescription().getName()));
 			return;
 		} 
 
-		if (s.getLine(0).equalsIgnoreCase(green + "License")&&useLicense&&permissions.has(p, "minecars.license.use")) {
+		if (s.getLine(0).equalsIgnoreCase(ChatColor.GREEN + "License")&&useLicense&&CarMod.permission.has(p, "minecars.license.use")) {
 			
 		}else{
 			return;
 		}
 		
-		if(permissions.has(p, "minecars.move")){
-			p.sendMessage(green+ "[MineCars] "+ white+ "You already have a Driver's License!");
+		if(CarMod.permission.has(p, "minecars.move")){
+			p.sendMessage(dGreen+ "[MineCars] "+ white+ "You already have a Driver's License!");
 			return;
 		}
-		if(FuelManager.economy.getBalance(p.getName())<licenseCost){
-			p.sendMessage(green+ "[MineCars License] "+ white+ "You can't afford a Driver's License.");
+		if(CarMod.economy.getBalance(p.getName())<licenseCost){
+			p.sendMessage(dGreen+ "[MineCars License] "+ white+ "You can't afford a Driver's License.");
 			return;
 		}
 			
-		FuelManager.economy.withdrawPlayer(p.getName(),(double)licenseCost);
+		CarMod.economy.withdrawPlayer(p.getName(),(double)licenseCost);
 		
-		if(!permissions.has(p, "minecars.useCommands")){
-			permissions.playerAdd(p, "minecars.useCommands");
+		if(!CarMod.permission.has(p, "minecars.useCommands")){
+			CarMod.permission.playerAdd(p, "minecars.useCommands");
 		}
 		
-		if(!permissions.has(p, "minecars.move")){
-			permissions.playerAdd(p, "minecars.move");
+		if(!CarMod.permission.has(p, "minecars.move")){
+			CarMod.permission.playerAdd(p, "minecars.move");
 		}
 		
-		if(!permissions.has(p, "minecars.fuelstation.use")){
-			permissions.playerAdd(p, "minecars.fuelstation.use");
+		if(!CarMod.permission.has(p, "minecars.fuelstation.use")){
+			CarMod.permission.playerAdd(p, "minecars.fuelstation.use");
 		}
 		
-		p.sendMessage(green+ "MineCars License: "+ white+ "Congratulations, You now have a Driver's License!");
+		if(!CarMod.permission.has(p, "minecars.create")){
+			CarMod.permission.playerAdd(p, "minecars.create");
+		}
+		
+		p.sendMessage(dGreen+ "MineCars License: "+ white+ "Congratulations, You now have a Driver's License!");
 			
-		mML.setupPermissions();
+		mPlugin.setupPermissions();
 	}
 }
 
@@ -226,11 +221,11 @@ public void loadSigns() throws IOException {
 		  Sign tempsign = (Sign) this.mPlugin.getServer().getWorld(tempcord[3]).getBlockAt(new Location(this.mPlugin.getServer().getWorld(tempcord[3]), new Double(tempcord[0]), new Double(tempcord[1]), new Double(tempcord[2]))).getState();
 		 
 		  String[] lines = tempsign.getLines();
-		  lines[0] = ChatColor.RED + "Fuel Station";
+		  lines[0] = ChatColor.GREEN + "Fuel Station";
 		
 		  lines[1] = white+" Costs: ";
 		  if (this.useEconomy) {
-			  lines[2] = white+new Integer(this.mPlugin.getConfig().getInt("priceperfuel")).toString() + " " + FuelManager.economy.currencyNamePlural();
+			  lines[2] = white+new Integer(this.mPlugin.getConfig().getInt("priceperfuel")).toString() + " " + CarMod.economy.currencyNamePlural();
 		  } else {
 			  lines[2] = white+new Integer(this.mPlugin.getConfig().getInt("itemsperfuel")).toString() + " " + Material.getMaterial(this.mPlugin.getConfig().getInt("fuelitemid")).name();
 		  }

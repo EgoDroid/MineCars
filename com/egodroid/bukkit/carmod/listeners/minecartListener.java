@@ -1,39 +1,26 @@
 package com.egodroid.bukkit.carmod.listeners;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.logging.Logger;
 
-import net.milkbowl.vault.permission.Permission;
-
-import org.bukkit.DyeColor;
 import org.bukkit.Effect;
-import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.event.vehicle.VehicleBlockCollisionEvent;
-import org.bukkit.event.vehicle.VehicleCollisionEvent;
-import org.bukkit.event.vehicle.VehicleCreateEvent;
-import org.bukkit.event.vehicle.VehicleEnterEvent;
-import org.bukkit.event.vehicle.VehicleMoveEvent;
-import org.bukkit.event.vehicle.VehicleUpdateEvent;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.vehicle.VehicleCreateEvent;
+import org.bukkit.event.vehicle.VehicleEnterEvent;
+import org.bukkit.event.vehicle.VehicleUpdateEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Step;
 import org.bukkit.material.Wool;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.util.Vector;
 
 import com.egodroid.bukkit.carmod.CarMod;
@@ -41,7 +28,7 @@ import com.egodroid.bukkit.carmod.util.FuelManager;
 
 
 public class minecartListener implements Listener {
-	private final Logger log = Logger.getLogger("Minecraft");
+
 	private int counter ;
 	private int mMultiplier = 2;
 	private int mStreetSpeedF = 2;
@@ -61,9 +48,9 @@ public class minecartListener implements Listener {
 	//End
 	
 	private CarMod mPlugin;
-	public static Permission permission = null;
+
 	
-	public boolean canMove = true;
+	public HashMap<String,Boolean> canMove;
 	
 	private Location oldlightLoc;
 	private byte oldlightLevel;
@@ -78,9 +65,17 @@ public minecartListener(CarMod plugin, FuelManager pFM) {
 	this.mPlugin = plugin;
 	this.mPlayerMap = new HashMap<String, Integer>();
 	this.mPlayerYawMap = new HashMap<String, Float>();
+	this.canMove = new HashMap<String,Boolean>();
     this.setupConfig();
-	this.setupPermissions();
 	
+    for(Player p: mPlugin.getServer().getOnlinePlayers()){
+    	try {
+			boolean move = mFuelM.canMove(p);
+			canMove.put(p.getName(), move);
+		} catch (SQLException e) {
+
+		}
+    }
 	
 }	
 
@@ -99,14 +94,23 @@ public void setupConfig() {
 	
 @EventHandler
 public void onPlayerLogin(PlayerLoginEvent event) {
+	
+	Player p = event.getPlayer();
+	boolean move;
+	
 	if (this.mPlayerMap.containsKey(event.getPlayer().getName())) {
-		return;
+		
 	} else {
 		this.mPlayerMap.put(event.getPlayer().getName(), 2);
 	}
 	
-
-
+	try {
+		move = this.mFuelM.canMove(p);
+		this.canMove.put(p.getName(), move);
+	} catch (SQLException e) {
+		
+		e.printStackTrace();
+	}
 }
 
 
@@ -122,13 +126,18 @@ public void onVehicleUpdate(VehicleUpdateEvent event) throws SQLException {
     if (!(passenger instanceof Player)) {
       return;
     }
+
     Player player = (Player)passenger;
     	if (event.getVehicle() instanceof Minecart) {
     		Minecart Auto = (Minecart) vehicle ;
     	//	vehicle.getLocation().getBlock()
     		Vector plPos = player.getLocation().getDirection();
-    		int drivingspeednormal = this.mPlayerMap.get(player.getName());
-    		int drivingspeedmw = this.mPlayerMap.get(player.getName());	
+    		if(!this.mPlayerMap.containsKey(player.getName())){
+        		this.mPlayerMap.put(player.getName(), 3);	
+    		}
+        	int drivingspeednormal = this.mPlayerMap.get(player.getName());
+        	int drivingspeedmw = this.mPlayerMap.get(player.getName());	
+
     		Location newLoc = Auto.getLocation();
     		Vector plvelocity = Auto.getPassenger().getVelocity();
     		//plvelocity.multiply(this.mMultiplier);	
@@ -138,7 +147,7 @@ public void onVehicleUpdate(VehicleUpdateEvent event) throws SQLException {
     			player.getWorld().playEffect(player.getLocation(), Effect.SMOKE, 0);
     		}
     		
-    		if (player.isInsideVehicle() && this.permission.has(player, "minecars.move")) {
+    		if (player.isInsideVehicle() && CarMod.permission.has(player, "minecars.move")) {
     		    float dir = (float)player.getLocation().getYaw();
     		    BlockFace face = getClosestFace(dir);
     		    Block stepblock = vehicle.getLocation().getBlock().getRelative(face );
@@ -159,7 +168,7 @@ public void onVehicleUpdate(VehicleUpdateEvent event) throws SQLException {
     			if (stepblock.getTypeId() == 43 || stepblock.getTypeId() == 44) {
 					Step step = new Step(stepblock.getType(), stepblock.getData());
 					if (step.getData() == (byte) this.mPlugin.getConfig().getInt("StreetStepType")) {
-						if(this.canMove && player.getVelocity().getX() != 0 && player.getVelocity().getY() != 0) {
+						if(this.canMove.get(player.getName()) && player.getVelocity().getX() != 0 && player.getVelocity().getY() != 0) {
 							Location newLoc2 = stepblock.getLocation();
 							newLoc2.add(0, 1.5d, 0);
 							Auto.teleport(newLoc2);
@@ -192,7 +201,7 @@ public void onVehicleUpdate(VehicleUpdateEvent event) throws SQLException {
     				Auto.setDerailedVelocityMod(new Vector(0,0,0));
     			}
     			  		    
-    			if (this.canMove && player.getVelocity().getX() !=0 && player.getVelocity().getZ() !=0 && normalblock.getTypeId() == 0) {
+    			if (this.canMove.get(player.getName()) && player.getVelocity().getX() !=0 && player.getVelocity().getZ() !=0 && normalblock.getTypeId() == 0) {
     				
     				
     				
@@ -238,7 +247,8 @@ public void onVehicleUpdate(VehicleUpdateEvent event) throws SQLException {
     							this.counter = 0;
     							this.mFuelM.hasMoved(player);
     							try {
-    								this.canMove = this.mFuelM.canMove(player);
+    								boolean move = this.mFuelM.canMove(player);
+    								this.canMove.put(player.getName(), move);
     							} catch (SQLException e) {
     								
     								e.printStackTrace();
@@ -301,15 +311,6 @@ public void setSpeedFactors(int pStreetF, int pMotorwayF) {
 	this.mStreetSpeedF = pStreetF;
 	this.mMotorWaySpeedF = pMotorwayF;
 	
-}
-
-protected boolean setupPermissions()
-{
-    RegisteredServiceProvider<Permission> permissionProvider = this.mPlugin.getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
-    if (permissionProvider != null) {
-        permission = permissionProvider.getProvider();
-    }
-    return (permission != null);
 }
 
 private void destroyCar(Player pPlayer, Minecart pVehicle, Block pUnterblock) {
@@ -390,7 +391,7 @@ public boolean isRightStep(Block pTestBlock) {
 public void onVehicleCreate(VehicleCreateEvent event) {
 	if (event.getVehicle() instanceof Minecart) {
 
-		Minecart cart = (Minecart) event.getVehicle();
+		//Minecart cart = (Minecart) event.getVehicle();
 		
 
 		}
@@ -421,7 +422,8 @@ private void movingCar(Minecart Auto, int pGear, Player player, Vector plvelocit
 		this.counter = 0;
 		this.mFuelM.hasMoved(player);
 		try {
-			this.canMove = this.mFuelM.canMove(player);
+			boolean move = this.mFuelM.canMove(player);
+			this.canMove.put(player.getName(), move);
 		} catch (SQLException e) {
 			
 			e.printStackTrace();

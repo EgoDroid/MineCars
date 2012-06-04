@@ -15,6 +15,8 @@ import com.egodroid.bukkit.carmod.CarMod;
 public class playerListener implements Listener {
 
 	private CarMod mPlugin;
+	private minecartListener mML;
+	
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		
@@ -31,8 +33,9 @@ public class playerListener implements Listener {
 						}
 						Location temploc = event.getClickedBlock().getLocation();
 						temploc.add(new Vector(0,1,0));
-						p.getWorld().spawn(temploc, Minecart.class);
+						Minecart m = p.getWorld().spawn(temploc, Minecart.class);
 						p.getInventory().removeItem(event.getPlayer().getInventory().getItemInHand());
+						mML.mineCars.put(p.getName(), m);
 					}
 				}
 		
@@ -44,8 +47,9 @@ public class playerListener implements Listener {
 						}
 						Location temploc = block.getLocation();
 						temploc.add(new Vector(0,1,0));
-						p.getWorld().spawn(temploc, Minecart.class);
+						Minecart m = p.getWorld().spawn(temploc, Minecart.class);
 						p.getInventory().removeItem(event.getPlayer().getInventory().getItemInHand());
+						mML.mineCars.put(p.getName(), m);
 					}
 				}
 			}
@@ -59,8 +63,9 @@ public class playerListener implements Listener {
 						}
 						Location temploc = event.getClickedBlock().getLocation();
 						temploc.add(new Vector(0,1,0));
-						p.getWorld().spawn(temploc, Minecart.class);
+						Minecart m = p.getWorld().spawn(temploc, Minecart.class);
 						p.getInventory().removeItem(event.getPlayer().getInventory().getItemInHand());
+						mML.mineCars.put(p.getName(), m);
 					}
 				}
 			}
@@ -68,8 +73,9 @@ public class playerListener implements Listener {
 		
 	}
 	
-	public playerListener(CarMod pPlugin) {
+	public playerListener(CarMod pPlugin, minecartListener pML) {
 		this.mPlugin = pPlugin;
+		this.mML = pML;
 	}
 
 

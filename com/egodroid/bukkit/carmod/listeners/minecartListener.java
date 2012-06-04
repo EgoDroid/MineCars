@@ -37,6 +37,7 @@ public class minecartListener implements Listener {
 	private boolean shouldDestroy = true;
 	private HashMap<String, Integer> mPlayerMap;
 	private HashMap<String, Float> mPlayerYawMap;
+	public HashMap<String,Minecart> mineCars; //For Owner System
 	private FuelManager mFuelM;
 	private boolean moved = false;
 	
@@ -103,7 +104,7 @@ public void onPlayerLogin(PlayerLoginEvent event) {
 	} else {
 		this.mPlayerMap.put(event.getPlayer().getName(), 2);
 	}
-	
+	//Updates players ability to move onPlayerJoin, this is a fail safe.
 	try {
 		move = this.mFuelM.canMove(p);
 		this.canMove.put(p.getName(), move);
@@ -126,9 +127,20 @@ public void onVehicleUpdate(VehicleUpdateEvent event) throws SQLException {
     if (!(passenger instanceof Player)) {
       return;
     }
+    
+    //Check for if this is a MineCar, should help reduce RAM usage in accordance with other Plugins using Minecarts.
+    if(vehicle instanceof Minecart){
+    	if(!mineCars.containsValue(vehicle)){
+    		
+    		return;
+    	}
+    }else{
+    	
+    	return;
+    }
 
     Player player = (Player)passenger;
-    	if (event.getVehicle() instanceof Minecart) {
+    	if (vehicle instanceof Minecart) {
     		Minecart Auto = (Minecart) vehicle ;
     	//	vehicle.getLocation().getBlock()
     		Vector plPos = player.getLocation().getDirection();

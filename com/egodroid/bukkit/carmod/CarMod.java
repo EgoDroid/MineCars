@@ -84,7 +84,7 @@ public class CarMod extends JavaPlugin  {
 	    
 	    this.mFM = new FuelManager(this);
 	    this.mML = new minecartListener(this, this.mFM);
-	    this.mPL = new playerListener(this);
+	    this.mPL = new playerListener(this, this.mML);
 	    try {
 			this.mSL = new signListener(this, this.mML, this.mFM);
 		} catch (IOException e) {

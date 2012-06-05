@@ -3,6 +3,7 @@ package com.egodroid.bukkit.carmod.listeners;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -65,6 +66,7 @@ public minecartListener(CarMod plugin, FuelManager pFM) {
 	this.mFuelM = pFM;
 	this.mPlugin = plugin;
 	this.mPlayerMap = new HashMap<String, Integer>();
+	this.mineCars = new HashMap<String, Minecart>();
 	this.mPlayerYawMap = new HashMap<String, Float>();
 	this.canMove = new HashMap<String,Boolean>();
     this.setupConfig();
@@ -131,7 +133,7 @@ public void onVehicleUpdate(VehicleUpdateEvent event) throws SQLException {
     //Check for if this is a MineCar, should help reduce RAM usage in accordance with other Plugins using Minecarts.
     if(vehicle instanceof Minecart){
     	if(!mineCars.containsValue(vehicle)){
-    		
+
     		return;
     	}
     }else{

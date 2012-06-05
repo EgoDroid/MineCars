@@ -2,8 +2,8 @@ package com.egodroid.bukkit.carmod.listeners;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -38,7 +38,7 @@ public class minecartListener implements Listener {
 	private boolean shouldDestroy = true;
 	private HashMap<String, Integer> mPlayerMap;
 	private HashMap<String, Float> mPlayerYawMap;
-	public HashMap<String,Minecart> mineCars; //For Owner System
+	public HashMap<String,UUID> mineCars; //For Owner System
 	private FuelManager mFuelM;
 	private boolean moved = false;
 	
@@ -66,7 +66,7 @@ public minecartListener(CarMod plugin, FuelManager pFM) {
 	this.mFuelM = pFM;
 	this.mPlugin = plugin;
 	this.mPlayerMap = new HashMap<String, Integer>();
-	this.mineCars = new HashMap<String, Minecart>();
+	this.mineCars = new HashMap<String, UUID>();
 	this.mPlayerYawMap = new HashMap<String, Float>();
 	this.canMove = new HashMap<String,Boolean>();
     this.setupConfig();
@@ -132,8 +132,8 @@ public void onVehicleUpdate(VehicleUpdateEvent event) throws SQLException {
     
     //Check for if this is a MineCar, should help reduce RAM usage in accordance with other Plugins using Minecarts.
     if(vehicle instanceof Minecart){
-    	if(!mineCars.containsValue(vehicle)){
-
+    	if(!mineCars.containsValue(vehicle.getUniqueId())){
+    	    
     		return;
     	}
     }else{
@@ -142,6 +142,7 @@ public void onVehicleUpdate(VehicleUpdateEvent event) throws SQLException {
     }
 
     Player player = (Player)passenger;
+
     	if (vehicle instanceof Minecart) {
     		Minecart Auto = (Minecart) vehicle ;
     	//	vehicle.getLocation().getBlock()

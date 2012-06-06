@@ -1,9 +1,11 @@
 package com.egodroid.bukkit.carmod.listeners;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -17,6 +19,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
+import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleUpdateEvent;
 import org.bukkit.inventory.ItemStack;
@@ -36,9 +39,11 @@ public class minecartListener implements Listener {
 	private int mMotorWaySpeedF = 5;
 	private boolean useWool = true;
 	private boolean shouldDestroy = true;
+	private boolean useOwnership = true;
 	private HashMap<String, Integer> mPlayerMap;
 	private HashMap<String, Float> mPlayerYawMap;
-	public HashMap<String,UUID> mineCars; //For Owner System
+	public HashMap<String,UUID> owners; //For Owner System
+	public ArrayList<UUID> mineCars;
 	private FuelManager mFuelM;
 	private boolean moved = false;
 	
@@ -66,7 +71,8 @@ public minecartListener(CarMod plugin, FuelManager pFM) {
 	this.mFuelM = pFM;
 	this.mPlugin = plugin;
 	this.mPlayerMap = new HashMap<String, Integer>();
-	this.mineCars = new HashMap<String, UUID>();
+	this.mineCars = new ArrayList<UUID>();
+	this.owners = new HashMap<String, UUID>();
 	this.mPlayerYawMap = new HashMap<String, Float>();
 	this.canMove = new HashMap<String,Boolean>();
     this.setupConfig();
@@ -84,6 +90,7 @@ public minecartListener(CarMod plugin, FuelManager pFM) {
 
 public void setupConfig() {
 	this.useWool = this.mPlugin.getConfig().getBoolean("useWool");
+	this.useOwnership = this.mPlugin.getConfig().getBoolean("UseOwnership");
 	if (this.useWool == true) {
 		this.mStreetWoolColor = this.mPlugin.getConfig().getString("WoolColorstreet");
 		this.mMWWoolColor = this.mPlugin.getConfig().getString("WoolColorMotorway");
@@ -132,7 +139,7 @@ public void onVehicleUpdate(VehicleUpdateEvent event) throws SQLException {
     
     //Check for if this is a MineCar, should help reduce RAM usage in accordance with other Plugins using Minecarts.
     if(vehicle instanceof Minecart){
-    	if(!mineCars.containsValue(vehicle.getUniqueId())){
+    	if(!mineCars.contains(vehicle.getUniqueId())){
     	    
     		return;
     	}
@@ -291,17 +298,96 @@ public void onVehicleUpdate(VehicleUpdateEvent event) throws SQLException {
 				Location tempLocYaw = Auto.getLocation();
 				tempLocYaw.setYaw(this.mPlayerYawMap.get(player.getName()));
 				Auto.teleport(tempLocYaw);
-    			}
-    			
-    			
+    			}	
     		}
-
     	}
-    
-	
-	
+	}
 
+@EventHandler
+public void onVehicleCreate(VehicleCreateEvent event) {
+	if (event.getVehicle() instanceof Minecart) {
+
+		//Minecart cart = (Minecart) event.getVehicle();
+		
+
+		}
 }
+
+@EventHandler
+public void onVehicleDestroy(VehicleDestroyEvent event) {
+    Entity breaker = event.getAttacker();
+    Vehicle v = event.getVehicle();
+    Player p;
+    
+    if (!(breaker instanceof Player)) {
+    	  
+        return;
+      }
+    
+    if (!(v instanceof Minecart)) {
+    	  
+        return;
+      }
+    
+    p = (Player)breaker;
+   
+    if(!mineCars.contains(v.getUniqueId())){
+    	
+    	return;
+    }
+    
+    if(useOwnership){ 
+        if(!owners.get(p.getName()).equals(v.getUniqueId())){
+        	p.sendMessage(ChatColor.DARK_GREEN+"[MineCars]"+ChatColor.WHITE+" This is not your MineCar!");
+        	
+        	event.setCancelled(true);
+        	return;
+        }
+    }
+    
+}
+
+@EventHandler
+public void onVehicleEnter(VehicleEnterEvent event) {
+	
+    Entity passenger = event.getEntered();
+    Vehicle v = event.getVehicle();
+    Player p;
+    
+    if (!(passenger instanceof Player)) {
+    	  
+        return;
+      }
+    
+    if (!(v instanceof Minecart)) {
+    	  
+        return;
+      }
+    
+    p = (Player)passenger;
+   
+    if(!mineCars.contains(v.getUniqueId())){
+    	
+    	return;
+    }
+    
+    if(useOwnership){ 
+        if(!owners.get(p.getName()).equals(v.getUniqueId())){
+        	p.sendMessage(ChatColor.DARK_GREEN+"[MineCars]"+ChatColor.WHITE+" This is not your MineCar!");
+        	
+        	event.setCancelled(true);
+        	return;
+        }
+    }
+    
+    this.mPlayerYawMap.put(((Player) event.getEntered()).getName(), new Float( event.getVehicle().getLocation().getYaw()));
+
+	
+	Location locyaw = event.getVehicle().getLocation();
+	locyaw.setYaw(event.getVehicle().getLocation().getYaw());
+	event.getVehicle().teleport(locyaw);
+	
+} 
 
 public void setSpeedMultiplier(int pMultiplier, Player pPlayer) {
 	String tempString = pPlayer.getName();
@@ -401,34 +487,6 @@ public boolean isRightStep(Block pTestBlock) {
 	}
 	return false;
 }
-
-@EventHandler
-public void onVehicleCreate(VehicleCreateEvent event) {
-	if (event.getVehicle() instanceof Minecart) {
-
-		//Minecart cart = (Minecart) event.getVehicle();
-		
-
-		}
-}
-
-
-@EventHandler
-public void onVehicleEnter(VehicleEnterEvent event) {
-    Entity passenger = event.getEntered();
-    if (!(passenger instanceof Player)) {
-  
-      return;
-    }
-   
-    this.mPlayerYawMap.put(((Player) event.getEntered()).getName(), new Float( event.getVehicle().getLocation().getYaw()));
-
-	
-	Location locyaw = event.getVehicle().getLocation();
-	locyaw.setYaw(event.getVehicle().getLocation().getYaw());
-	event.getVehicle().teleport(locyaw);
-	
-} 
 
 private void movingCar(Minecart Auto, int pGear, Player player, Vector plvelocity, boolean motorway) {
 	Location newLoc = Auto.getLocation();

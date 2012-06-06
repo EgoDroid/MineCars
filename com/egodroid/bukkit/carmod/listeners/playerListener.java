@@ -38,7 +38,8 @@ public class playerListener implements Listener {
 						temploc.add(new Vector(0,1,0));
 						Minecart m = p.getWorld().spawn(temploc, Minecart.class);
 						p.getInventory().removeItem(event.getPlayer().getInventory().getItemInHand());
-						mML.mineCars.put(p.getName(), m.getUniqueId());
+						mML.mineCars.add(m.getUniqueId());
+						mML.owners.put(p.getName(), m.getUniqueId());
 					}
 				}
 		
@@ -54,7 +55,8 @@ public class playerListener implements Listener {
 						temploc.add(new Vector(0,1,0));
 						Minecart m = p.getWorld().spawn(temploc, Minecart.class);
 						p.getInventory().removeItem(event.getPlayer().getInventory().getItemInHand());
-						mML.mineCars.put(p.getName(), m.getUniqueId());
+						mML.mineCars.add(m.getUniqueId());
+						mML.owners.put(p.getName(), m.getUniqueId());
 					}
 				}
 			}
@@ -72,7 +74,8 @@ public class playerListener implements Listener {
 						temploc.add(new Vector(0,1,0));
 						Minecart m = p.getWorld().spawn(temploc, Minecart.class);
 						p.getInventory().removeItem(event.getPlayer().getInventory().getItemInHand());
-						mML.mineCars.put(p.getName(), m.getUniqueId());
+						mML.mineCars.add(m.getUniqueId());
+						mML.owners.put(p.getName(), m.getUniqueId());
 					}
 				}
 			}

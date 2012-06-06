@@ -78,6 +78,7 @@ public class CarMod extends JavaPlugin  {
 	    //Utilities-Init
 	    
         //Vault setups
+	    checkVault(pm);
 		setupEconomy();
 		setupPermissions();
 		log.info(permission+"");
@@ -169,7 +170,7 @@ public class CarMod extends JavaPlugin  {
 	      return (permission != null);
 	  }
 	  
-/*	  private void checkVault(PluginManager pm){
+	  private void checkVault(PluginManager pm){
 		  Plugin p = pm.getPlugin("Vault");
 	      if (p != null) {
 	    	  return;
@@ -179,6 +180,5 @@ public class CarMod extends JavaPlugin  {
 	    	  this.setEnabled(false);
 	        }
 	    }
-	    */
 }
 

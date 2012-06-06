@@ -1,4 +1,4 @@
-# MineCars V1.6 Config File
+# MineCars V1.8 Config File
 #
 # Permission Nodes:
 #
@@ -34,6 +34,7 @@
 # -> Configure Streetblocks
 # 
 # By Reshka94 (EGODROID)
+# 
 # All rights reserved.
 #
 
@@ -47,6 +48,9 @@ placeMinecart: true
 
 # Do you want to use an exhaust for your Minecar(t)? (creates Smoke around your Minecar)
 UseExhaust: true
+
+# Do you want to use the ownership system for MineCars?
+UseOwnership: true
 
 # Do you want to use a railing system (conductor rails)? Define the rail block over here (set it to 0 if you don't want to use one)
 RailingBlock: 101
@@ -108,7 +112,10 @@ streetBlock: 1
 # Block ID for Motorways 
 motorwayBlock: 4
 
-### ** FUEL SYSTEM **
+###############
+# FUEL SYSTEM #
+###############
+
 # Should users buy fuel to run their Minecar?
 UseFuelSystem: true
 

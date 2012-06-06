@@ -2,6 +2,7 @@ package com.egodroid.bukkit.carmod.commands;
 
 import java.io.IOException;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -80,6 +81,7 @@ public class CommandManager implements CommandExecutor {
                 
                 if(commandarg.equals("fuel")) {
              	   sender.sendMessage( mFM.getProgressBar( (Player) sender));
+             	   Bukkit.broadcastMessage(""+mML.canMove.get(sender.getName()));
              	  return true;
                 }
                 

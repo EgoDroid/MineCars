@@ -81,7 +81,7 @@ public class CommandManager implements CommandExecutor {
                 
                 if(commandarg.equals("fuel")) {
              	   sender.sendMessage( mFM.getProgressBar( (Player) sender));
-             	   Bukkit.broadcastMessage(""+mML.canMove.get(sender.getName()));
+             	   
              	  return true;
                 }
                 

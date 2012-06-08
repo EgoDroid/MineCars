@@ -1,4 +1,4 @@
-# MineCars V1.8 Config File
+# MineCars V1.9 Config File
 #
 # Permission Nodes:
 #
@@ -99,18 +99,18 @@ useWool: true
 # YELLOW 
 
 # Color for streets
-WoolColorstreet: GRAY
+WoolColorStreet: [GRAY]
 # Color for wool
-WoolColorMotorway: BLACK
+WoolColorMotorway: [BLACK]
 
 
 # If useWool = false, define the blocks for streets and motorways
 # Please use Item IDs, no names! You can find every ID with google!
 #
 # Block ID for Streets
-streetBlock: 1
+streetBlock: [1]
 # Block ID for Motorways 
-motorwayBlock: 4
+motorwayBlock: [4]
 
 ###############
 # FUEL SYSTEM #
@@ -121,7 +121,7 @@ UseFuelSystem: true
 
 # Do you want to pay with Money or Items? (money = true)
 # Economy requires the PlugIn Vault !!
-UseEconomy: false
+UseEconomy: true
 
 # If useEconomy = true, define the costs for one fuel load over here
 priceperfuel: 15
@@ -137,7 +137,7 @@ itemsperfuel: 5
 # Driver's License #
 ####################
 
-# This option will decide if you want the Driver's License signs to function or not
+# This option will decide if you want the Driver's License Signs to function or not
 UseLicense: true
 
 # This is the amount it will cost to buy a Driver's License when using the sign

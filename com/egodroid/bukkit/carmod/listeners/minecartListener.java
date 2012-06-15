@@ -691,6 +691,8 @@ private void movingCar(Minecart Auto, int pGear, Player player, Vector plvelocit
 			
 			e.printStackTrace();
 		}
+	}else{
+		counter.put(player.getName(), tmp++);
 	}
 	if (motorway == false) 
 		plvelocity.multiply(this.mStreetSpeedF);

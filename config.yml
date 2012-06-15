@@ -1,4 +1,4 @@
-# MineCars V1.9 Config File
+# MineCars V2.1 Config File
 #
 # Permission Nodes:
 #
@@ -11,30 +11,12 @@
 # minecars.fuelstation.use       # Allows your player to use a Fuelstation
 # minecars.fuelstation.create    # Allows a player to create a Fuel Station (create a sign, first line : Fuel Station)
 # minecars.fuelstation.destroy   # Allows a player to destroy a Fuel Station
-#
-# ChangeLog:
 # 
-#  
-#  
-#  **V1.4**
-# -> Added Fuel Stations (click on shields with the heading Fuel Station to sell fuel) (depends on the Fuel System setting)
-# -> Climb hills with your MineCar(t) (using steps, define the step material below, StreetStepType)
-# -> A MineCar(t) has got an Exhaust now (UseExhaust(
-# -> Fixed many bugs!
-#
-#  **V1.3**
-# -> Added car destroy function (if the car leaves the defined streetblocks, it will be destroyed)
-# -> Added Permissions
-# -> Added new Subcommands: /mcg adminfuel (free fuel load for admins, see Permissions) ; /mcg reload (reloads the config) 
-# -> Place Minecarts on the defined blocks (see config file)
-# -> Using new Database => Fixed Essentials Bug
-#
-#  **V1.2**
-# -> Added Fuel System (with Economy)
-# -> Configure Streetblocks
 # 
 # By Reshka94 (EGODROID)
 # 
+# Versions post 1.5 By Silentnight18
+#
 # All rights reserved.
 #
 

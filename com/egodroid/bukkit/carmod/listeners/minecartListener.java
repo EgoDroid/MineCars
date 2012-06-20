@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
 import org.bukkit.Location;
@@ -345,10 +346,10 @@ public void onVehicleUpdate(VehicleUpdateEvent event) throws SQLException {
     						
     					if(underblock.getType() == Material.WOOL) {
     						
-    						Wool wolle = new Wool(underblock.getType(), underblock.getData());
+    						Wool wool = new Wool(underblock.getType(), underblock.getData());
 
     						for(String s: mStreetWoolColor){
-    							if (wolle.getColor().toString().equalsIgnoreCase(s)) {
+    							if (wool.getColor().toString().equalsIgnoreCase(s)) {
         							this.movingCar(Auto, drivingspeednormal, player, plvelocity, false);
         							
         							return;
@@ -356,7 +357,7 @@ public void onVehicleUpdate(VehicleUpdateEvent event) throws SQLException {
     						}
     						
     						for(String s: mMWWoolColor){
-    							if (wolle.getColor().toString().equalsIgnoreCase(s)) {
+    							if (wool.getColor().toString().equalsIgnoreCase(s)) {
         							this.movingCar(Auto, drivingspeednormal, player, plvelocity, true);
         							
         							return;
@@ -365,7 +366,7 @@ public void onVehicleUpdate(VehicleUpdateEvent event) throws SQLException {
     					}
     				}else{
     					for(String m: mStreetBlock){
-    						if (underblock.getType().equals(Material.getMaterial(m))) {
+    						if (underblock.getType().equals(Material.getMaterial(Integer.parseInt(m)))) {
         	    				this.movingCar(Auto, drivingspeednormal, player, plvelocity, false);
         	    				
         	    				return;
@@ -373,7 +374,7 @@ public void onVehicleUpdate(VehicleUpdateEvent event) throws SQLException {
     					}
     					
     					for(String m: mMotorwayBlock){
-    						if (underblock.getType().equals(Material.getMaterial(m))) {
+    						if (underblock.getType().equals(Material.getMaterial(Integer.parseInt(m)))) {
         	    				this.movingCar(Auto, drivingspeednormal, player, plvelocity, true);
         	    				
         	    				return;
@@ -446,7 +447,7 @@ public void onVehicleDestroy(VehicleDestroyEvent event) {
     }
     
     if(useOwnership){ 
-        if(!owners.get(p.getName()).equals(v.getUniqueId())){
+        if(!owners.get(p.getName()).equals(v.getUniqueId())&&!mPlugin.permission.has(p, "minecars.admin")){
         	p.sendMessage(ChatColor.DARK_GREEN+"[MineCars]"+ChatColor.WHITE+" This is not your MineCar!");
         	
         	event.setCancelled(true);
@@ -482,14 +483,14 @@ public void onVehicleEnter(VehicleEnterEvent event) {
 
     
     if(useOwnership){ 
-    	if(!owners.containsKey(p.getName())){
+    	if(!owners.containsKey(p.getName())&&!mPlugin.permission.has(p, "minecars.admin")){
         	p.sendMessage(ChatColor.DARK_GREEN+"[MineCars]"+ChatColor.WHITE+" This is not your MineCar!");
         	
         	event.setCancelled(true);
         	return;
     	}
     	
-        if(!owners.get(p.getName()).equals(v.getUniqueId())){
+        if(!owners.get(p.getName()).equals(v.getUniqueId())&&!mPlugin.permission.has(p, "minecars.admin")){
         	p.sendMessage(ChatColor.DARK_GREEN+"[MineCars]"+ChatColor.WHITE+" This is not your MineCar!");
         	
         	event.setCancelled(true);
@@ -622,6 +623,8 @@ public BlockFace getClosestFace(float direction){
 
 public boolean drivableBlock(Block b){
 	
+	Bukkit.broadcastMessage(b.getType()+"");
+	
 	if(this.useWool == true) {			
 		
 		if(b.getType() == Material.WOOL) {
@@ -644,14 +647,14 @@ public boolean drivableBlock(Block b){
 		}
 	}else{
 		for(String m: mStreetBlock){
-			if (b.getType().equals(Material.getMaterial(m))) {
+			if (b.getType().equals(Material.getMaterial(Integer.parseInt(m)))) {
 				
 				return true;
 			}
 		}
 		
 		for(String m: mMotorwayBlock){
-			if (b.getType().equals(Material.getMaterial(m))) {
+			if (b.getType().equals(Material.getMaterial(Integer.parseInt(m)))) {
 				
 				return true;
 			}

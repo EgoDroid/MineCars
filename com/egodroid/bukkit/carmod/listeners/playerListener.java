@@ -37,27 +37,28 @@ public class playerListener implements Listener {
 				p.getInventory().removeItem(event.getPlayer().getInventory().getItemInHand());
 				mML.mineCars.add(m.getUniqueId());
 				mML.owners.put(p.getName(), m.getUniqueId());
-			}
-		}
-			
-		if (p.getItemInHand().getTypeId() == 328) {
-			if (block.getTypeId() == 43 || block.getTypeId() == 44) {
-				Step step = new Step(block.getType(), block.getData());
-				if (step.getData() == (byte) this.mPlugin.getConfig().getInt("StreetStepType")) { 
-					if(!CarMod.permission.has(p, "minecars.create")){
-						p.sendMessage(ChatColor.DARK_GREEN+"[MineCars]"+ ChatColor.WHITE+" You don't have permission to place MineCars!");
-							
-						return;
+			}else{
+				if (p.getItemInHand().getTypeId() == 328) {
+					if (block.getTypeId() == 43 || block.getTypeId() == 44) {
+						Step step = new Step(block.getType(), block.getData());
+						if (step.getData() == (byte) this.mPlugin.getConfig().getInt("StreetStepType")) { 
+							if(!CarMod.permission.has(p, "minecars.create")){
+								p.sendMessage(ChatColor.DARK_GREEN+"[MineCars]"+ ChatColor.WHITE+" You don't have permission to place MineCars!");
+									
+								return;
+							}
+							Location temploc = event.getClickedBlock().getLocation();
+							temploc.add(new Vector(0,1,0));
+							Minecart m = p.getWorld().spawn(temploc, Minecart.class);
+							p.getInventory().removeItem(event.getPlayer().getInventory().getItemInHand());
+							mML.mineCars.add(m.getUniqueId());
+							mML.owners.put(p.getName(), m.getUniqueId());
+						}
 					}
-					Location temploc = event.getClickedBlock().getLocation();
-					temploc.add(new Vector(0,1,0));
-					Minecart m = p.getWorld().spawn(temploc, Minecart.class);
-					p.getInventory().removeItem(event.getPlayer().getInventory().getItemInHand());
-					mML.mineCars.add(m.getUniqueId());
-					mML.owners.put(p.getName(), m.getUniqueId());
 				}
 			}
-		}
+		}		
+
 	}
 	
 	public playerListener(CarMod pPlugin, minecartListener pML) {

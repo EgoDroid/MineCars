@@ -1,5 +1,5 @@
 name: MineCars
-version: 2.1
+version: 2.2
 description: This plugin allows you to drive with your Minecart without Rails just using your movement keys on specified blocks (see config). More on MineCars BukkitDev page!
 # We could place every author in the authors list, but chose not to for illustrative purposes
 # Also, having an author distinguishes that person as the project lead, and ensures their 

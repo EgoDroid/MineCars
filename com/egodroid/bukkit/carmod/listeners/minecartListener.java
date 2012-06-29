@@ -18,6 +18,7 @@ import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
@@ -447,7 +448,7 @@ public void onVehicleDestroy(VehicleDestroyEvent event) {
     }
     
     if(useOwnership){ 
-        if(!owners.get(p.getName()).equals(v.getUniqueId())&&!mPlugin.permission.has(p, "minecars.admin")){
+        if(!owners.get(p.getName()).equals(v.getUniqueId())&&!CarMod.permission.has(p, "minecars.admin")){
         	p.sendMessage(ChatColor.DARK_GREEN+"[MineCars]"+ChatColor.WHITE+" This is not your MineCar!");
         	
         	event.setCancelled(true);
@@ -483,14 +484,14 @@ public void onVehicleEnter(VehicleEnterEvent event) {
 
     
     if(useOwnership){ 
-    	if(!owners.containsKey(p.getName())&&!mPlugin.permission.has(p, "minecars.admin")){
+    	if(!owners.containsKey(p.getName())&&!CarMod.permission.has(p, "minecars.admin")){
         	p.sendMessage(ChatColor.DARK_GREEN+"[MineCars]"+ChatColor.WHITE+" This is not your MineCar!");
         	
         	event.setCancelled(true);
         	return;
     	}
     	
-        if(!owners.get(p.getName()).equals(v.getUniqueId())&&!mPlugin.permission.has(p, "minecars.admin")){
+        if(!owners.get(p.getName()).equals(v.getUniqueId())&&!CarMod.permission.has(p, "minecars.admin")){
         	p.sendMessage(ChatColor.DARK_GREEN+"[MineCars]"+ChatColor.WHITE+" This is not your MineCar!");
         	
         	event.setCancelled(true);
@@ -504,11 +505,14 @@ public void onVehicleEnter(VehicleEnterEvent event) {
 	v.teleport(locyaw);
 } 
 
+@EventHandler(priority = EventPriority.HIGHEST)
 public void onEntityCollision(VehicleEntityCollisionEvent e){
 	
+	Entity passenger;
     Vehicle v = e.getVehicle();
-    //Player p;
+    Player p;
     //Bukkit.broadcastMessage("Bump");
+    
     if (!(v instanceof Minecart)) {
 
         return;
@@ -525,6 +529,17 @@ public void onEntityCollision(VehicleEntityCollisionEvent e){
     	return;
     }
     
+    passenger = v.getPassenger();
+
+    if (!(passenger instanceof Player)) {
+    	  
+        return;
+      }
+    p = (Player) passenger;
+    
+    Entity hit = e.getEntity();
+    
+    Bukkit.broadcastMessage(((Player)hit).getHealth()+"");
     //More to come
 }
 
@@ -622,8 +637,6 @@ public BlockFace getClosestFace(float direction){
 }
 
 public boolean drivableBlock(Block b){
-	
-	Bukkit.broadcastMessage(b.getType()+"");
 	
 	if(this.useWool == true) {			
 		

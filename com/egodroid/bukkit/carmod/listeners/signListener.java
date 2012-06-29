@@ -68,7 +68,7 @@ public void onSignChange(SignChangeEvent event) throws IOException {
 		String[] templines = event.getLines();
 		if(templines[0].equalsIgnoreCase("Fuel Station")) {
 			if (CarMod.permission.has(event.getPlayer(), "minecars.fuelstation.create")) {
-				String temploc = Double.toString(event.getBlock().getLocation().getX()) + ";" + Double.toString(event.getBlock().getLocation().getY()) + ";" + Double.toString(event.getBlock().getLocation().getZ()) + ";" + event.getBlock().getWorld().getName(); 
+				//String temploc = Double.toString(event.getBlock().getLocation().getX()) + ";" + Double.toString(event.getBlock().getLocation().getY()) + ";" + Double.toString(event.getBlock().getLocation().getZ()) + ";" + event.getBlock().getWorld().getName(); 
 				this.addSign(event.getBlock().getLocation(), event.getBlock().getWorld().getName());
 		  
 		  templines[0] = green + "Fuel Station";
@@ -296,8 +296,8 @@ private boolean destroySign(String pLoctoRemove) throws IOException {
 	  reader.close();
 
 	  this.inputFile.delete();
-	  boolean successful;
-	 return successful = this.tempFile.renameTo(this.inputFile);
+	  
+	 return this.tempFile.renameTo(this.inputFile);
 
 }
 

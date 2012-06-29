@@ -23,12 +23,6 @@ import javax.persistence.PersistenceException;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
@@ -116,7 +110,7 @@ public class CarMod extends JavaPlugin  {
 
 	  public List<Class<?>> getDatabaseClasses()
 	  {
-	    List list = new ArrayList();
+	    List<Class<?>> list = new ArrayList<Class<?>>();
 	    list.add(EbeanDB.class);
 	    return list;
 	  }

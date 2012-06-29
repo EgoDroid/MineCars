@@ -1,10 +1,8 @@
 package com.egodroid.bukkit.carmod.database;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import org.bukkit.entity.Player;
 
 import com.avaje.ebean.validation.NotNull;
 

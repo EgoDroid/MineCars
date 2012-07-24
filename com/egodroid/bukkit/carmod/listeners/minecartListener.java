@@ -510,7 +510,8 @@ public void onEntityCollision(VehicleEntityCollisionEvent e){
 	
 	Entity passenger;
     Vehicle v = e.getVehicle();
-    Player p;
+    @SuppressWarnings("unused")
+	Player p;
     //Bukkit.broadcastMessage("Bump");
     
     if (!(v instanceof Minecart)) {
@@ -539,7 +540,7 @@ public void onEntityCollision(VehicleEntityCollisionEvent e){
     
     Entity hit = e.getEntity();
     
-    Bukkit.broadcastMessage(((Player)hit).getHealth()+"");
+    //Bukkit.broadcastMessage(((Player)hit).getHealth()+"");
     //More to come
 }
 
